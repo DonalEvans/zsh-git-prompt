@@ -11,7 +11,6 @@ gitsym = Popen(['git', 'symbolic-ref', 'HEAD'], stdout=PIPE, stderr=PIPE)
 branch, error = gitsym.communicate()
 
 error_string = error.decode('utf-8')
-
 if 'fatal: Not a git repository' in error_string:
 	sys.exit(0)
 
@@ -36,6 +35,7 @@ ahead, behind = 0,0
 
 if not branch: # not on any branch
 	branch = prehash + Popen(['git','rev-parse','--short','HEAD'], stdout=PIPE).communicate()[0].decode("utf-8")[:-1]
+	remote_name = 'detached'
 else:
 	remote_name = Popen(['git','config','branch.%s.remote' % branch], stdout=PIPE).communicate()[0].decode("utf-8").strip()
 	if remote_name:
@@ -53,6 +53,7 @@ else:
 		behind = len(behead) - ahead
 
 out = ' '.join([
+	remote_name,
 	branch,
 	str(ahead),
 	str(behind),
