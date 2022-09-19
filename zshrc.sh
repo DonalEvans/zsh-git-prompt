@@ -37,6 +37,7 @@ function precmd_update_git_vars() {
 
 function update_current_git_vars() {
     unset __CURRENT_GIT_STATUS
+    unset GIT_STASHED
     _GIT_STATUS=""
     if [ -d .git ] || git rev-parse --git-dir > /dev/null 2>&1 ; then
         if [[ "$GIT_PROMPT_EXECUTABLE" == "python" ]]; then
@@ -46,6 +47,7 @@ function update_current_git_vars() {
         if [[ "$GIT_PROMPT_EXECUTABLE" == "haskell" ]]; then
             _GIT_STATUS=`git status --porcelain --branch &> /dev/null | $__GIT_PROMPT_DIR/src/.bin/gitstatus`
         fi
+        GIT_STASHED=$(git stash list | wc -l | xargs)
     fi
      __CURRENT_GIT_STATUS=("${(@s: :)_GIT_STATUS}")
 	GIT_REMOTE=$__CURRENT_GIT_STATUS[1]
@@ -107,6 +109,14 @@ git_super_status() {
 		  STATUS="$STATUS$ZSH_THEME_GIT_PROMPT_CLEAN"
 	  fi
 	  STATUS="$STATUS%{${reset_color}%}$ZSH_THEME_GIT_PROMPT_SUFFIX"
+    if [ "$GIT_STASHED" -ne "0" ]; then
+      if [ "$previousExists" -ne "0" ]; then
+        # Add a space between the elements
+        STATUS="$STATUS "
+      fi
+      previousExists=1
+      STATUS="$STATUS$ZSH_THEME_GIT_PROMPT_STASHED{$GIT_STASHED}%{${reset_color}%}"
+    fi
 	  echo "$STATUS"
 	fi
 }
@@ -124,5 +134,6 @@ ZSH_THEME_GIT_PROMPT_BEHIND="%F{70}%{↓%G%}"
 ZSH_THEME_GIT_PROMPT_AHEAD="%F{70}%{↑%G%}"
 ZSH_THEME_GIT_PROMPT_UNTRACKED="%{$fg[red]%}%{?:%G%}"
 ZSH_THEME_GIT_PROMPT_CLEAN="%{$fg_bold[green]%}%{✔%G%}"
+ZSH_THEME_GIT_PROMPT_STASHED="%{$fg_bold[green]%}"
 
 
