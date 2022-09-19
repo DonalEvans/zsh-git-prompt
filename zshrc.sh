@@ -62,20 +62,31 @@ function update_current_git_vars() {
 
 
 git_super_status() {
-    if [ -n "$__CURRENT_GIT_STATUS" ]; then
-	  STATUS="$ZSH_THEME_GIT_PROMPT_PREFIX$ZSH_THEME_GIT_PROMPT_REMOTE$GIT_REMOTE%{${reset_color}%} → $ZSH_THEME_GIT_PROMPT_BRANCH$GIT_BRANCH%{${reset_color}%}"
-	  if [ "$GIT_BEHIND" -ne "0" ]; then
+  if [ -n "$__CURRENT_GIT_STATUS" ]; then
+    STATUS="$ZSH_THEME_GIT_PROMPT_PREFIX"
+    
+    if [ -n "$GIT_REMOTE" ]; then
+     STATUS="$STATUS$ZSH_THEME_GIT_PROMPT_REMOTE$GIT_REMOTE%{${reset_color}%} → " 
+    fi
+	  
+    STATUS="$STATUS$ZSH_THEME_GIT_PROMPT_BRANCH$GIT_BRANCH%{${reset_color}%}"
+	  
+    if [ "$GIT_BEHIND" -ne "0" ]; then
 		  STATUS="$STATUS $ZSH_THEME_GIT_PROMPT_BEHIND$GIT_BEHIND%{${reset_color}%}"
 	  fi
-	  if [ "$GIT_AHEAD" -ne "0" ]; then
+	  
+    if [ "$GIT_AHEAD" -ne "0" ]; then
 		  STATUS="$STATUS $ZSH_THEME_GIT_PROMPT_AHEAD$GIT_AHEAD%{${reset_color}%}"
 	  fi
-	  STATUS="$STATUS$ZSH_THEME_GIT_PROMPT_SEPARATOR"
+	  
+    STATUS="$STATUS$ZSH_THEME_GIT_PROMPT_SEPARATOR"
     previousExists=0
-	  if [ "$GIT_STAGED" -ne "0" ]; then
+	  
+    if [ "$GIT_STAGED" -ne "0" ]; then
 		  STATUS="$STATUS$ZSH_THEME_GIT_PROMPT_STAGED$GIT_STAGED%{${reset_color}%}"
       previousExists=1
 	  fi
+    
     if [ "$GIT_CONFLICTS" -ne "0" ]; then
       if [ "$previousExists" -ne "0" ]; then
         # Add a space between the elements
@@ -84,7 +95,8 @@ git_super_status() {
       previousExists=1
 		  STATUS="$STATUS$ZSH_THEME_GIT_PROMPT_CONFLICTS$GIT_CONFLICTS%{${reset_color}%}"
 	  fi
-	  if [ "$GIT_CHANGED" -ne "0" ]; then
+	  
+    if [ "$GIT_CHANGED" -ne "0" ]; then
       if [ "$previousExists" -ne "0" ]; then
         # Add a space between the elements
         STATUS="$STATUS "
@@ -92,7 +104,8 @@ git_super_status() {
       previousExists=1
       STATUS="$STATUS$ZSH_THEME_GIT_PROMPT_CHANGED$GIT_CHANGED%{${reset_color}%}"
 	  fi
-	  if [ "$GIT_UNTRACKED" -ne "0" ]; then
+	  
+    if [ "$GIT_UNTRACKED" -ne "0" ]; then
       if [ "$previousExists" -ne "0" ]; then
         # Add a space between the elements
         STATUS="$STATUS "
@@ -100,7 +113,8 @@ git_super_status() {
       previousExists=1
 		  STATUS="$STATUS$ZSH_THEME_GIT_PROMPT_UNTRACKED$GIT_UNTRACKED%{${reset_color}%}"
 	  fi
-	  if [ "$GIT_CHANGED" -eq "0" ] && [ "$GIT_CONFLICTS" -eq "0" ] && [ "$GIT_STAGED" -eq "0" ] && [ "$GIT_UNTRACKED" -eq "0" ]; then
+	  
+    if [ "$GIT_CHANGED" -eq "0" ] && [ "$GIT_CONFLICTS" -eq "0" ] && [ "$GIT_STAGED" -eq "0" ] && [ "$GIT_UNTRACKED" -eq "0" ]; then
       if [ "$previousExists" -ne "0" ]; then
         # Add a space between the elements
         STATUS="$STATUS "
@@ -108,7 +122,9 @@ git_super_status() {
       previousExists=1
 		  STATUS="$STATUS$ZSH_THEME_GIT_PROMPT_CLEAN"
 	  fi
-	  STATUS="$STATUS%{${reset_color}%}$ZSH_THEME_GIT_PROMPT_SUFFIX"
+	  
+    STATUS="$STATUS%{${reset_color}%}$ZSH_THEME_GIT_PROMPT_SUFFIX"
+    
     if [ "$GIT_STASHED" -ne "0" ]; then
       if [ "$previousExists" -ne "0" ]; then
         # Add a space between the elements
@@ -134,6 +150,6 @@ ZSH_THEME_GIT_PROMPT_BEHIND="%F{70}%{↓%G%}"
 ZSH_THEME_GIT_PROMPT_AHEAD="%F{70}%{↑%G%}"
 ZSH_THEME_GIT_PROMPT_UNTRACKED="%{$fg[red]%}%{?:%G%}"
 ZSH_THEME_GIT_PROMPT_CLEAN="%{$fg_bold[green]%}%{✔%G%}"
-ZSH_THEME_GIT_PROMPT_STASHED="%{$fg_bold[green]%}"
+ZSH_THEME_GIT_PROMPT_STASHED="%F{70}"
 
 
